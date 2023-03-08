@@ -52,7 +52,7 @@ int main(int argc, char** argv) {
         execvp(arg[0], &arg[0]);
     } else {
         wait(NULL);
-        orig_rax = ptrace(PTRACE_PEEKUSER, child, WORD_SIZE * ORIG_RAX,NULL);
+        CHK(orig_rax = ptrace(PTRACE_PEEKUSER, child, WORD_SIZE * ORIG_RAX,NULL));
         printf("Le fils a fait un sycall %d\n",orig_rax);
     }
 
