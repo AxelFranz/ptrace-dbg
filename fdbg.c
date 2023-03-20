@@ -311,8 +311,8 @@ const char* calls[336] = {
 	"EPOLL_PWAIT",
 	"SIGNALFD",
 	"TIMERFD_CREATE",
-	"EVENTFD",
-	"FALLOCATE",
+    "EVENTFD",
+    "FALLOCATE",
 	"TIMERFD_SETTIME",
 	"TIMERFD_GETTIME",
 	"ACCEPT4",
@@ -369,7 +369,6 @@ const char* calls[336] = {
 
 #define WORD_SIZE 8
 
-
 int main(int argc, char** argv) {
     pid_t child;
     int orig_rax; 
@@ -381,15 +380,17 @@ int main(int argc, char** argv) {
 
     switch(child = fork()){
         case -1:
-            raler(0,"error fork");
+            raler(1,"error fork");
 
         case 0: 
             CHK(ptrace(PTRACE_TRACEME,0,NULL,NULL)); // On trace ce qui suit
             int fd;
             CHK(fd = open("tmp",O_WRONLY | O_CREAT | O_TRUNC, 0666));
 
+            // On redirige stdout dans tmp
             CHK(close(1));
             CHK(dup(fd));
+            
 
             execvp(argv[1],&argv[1]);
             exit(EXIT_FAILURE);
