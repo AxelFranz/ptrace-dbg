@@ -26,7 +26,7 @@ noreturn void raler (int syserr, const char *msg, ...)
     exit (EXIT_FAILURE);
 }
 
-const char* calls[314] = {
+const char* calls[336] = {
 	"READ",
 	"WRITE",
 	"OPEN",
@@ -341,6 +341,28 @@ const char* calls[314] = {
 	"PROCESS_VM_WRITEV",
 	"KCMP",
 	"FINIT_MODULE",
+    "SYS_SCHED_SETATTR",
+    "SYS_SCHED_GETATTR",
+    "SYS_RENAMEAT2",
+    "SYS_SECCOMP",
+    "SYS_GETRANDOM",
+    "SYS_MEMFD_CREATE",
+    "SYS_KEXEC_FILE_LOAD",
+    "SYS_BPF",
+    "STUB_EXECVEAT",
+    "USERFAULTFD",
+    "MEMBARRIER",
+    "MLOCK2",
+    "COPY_FILE_RANGE",
+    "PREADV2",
+    "PWRITEV2",
+    "PKEY_MPROTECT",
+    "PKEY_ALLOC",
+    "PKEY_FREE",
+    "STATX",
+    "IO_PGETEVENTS",
+    "RSEQ",
+    "PKEY_MPROTECT",
 };
 
 #define CHK(op) do { if ((op) == -1) raler (1, #op); } while (0)
@@ -363,6 +385,12 @@ int main(int argc, char** argv) {
 
         case 0: 
             CHK(ptrace(PTRACE_TRACEME,0,NULL,NULL)); // On trace ce qui suit
+            int fd;
+            CHK(fd = open("tmp",O_WRONLY | O_CREAT | O_TRUNC, 0666));
+
+            CHK(close(0));
+            CHK(dup(fd));
+
             execvp(argv[1],&argv[1]);
             exit(EXIT_FAILURE);
 
