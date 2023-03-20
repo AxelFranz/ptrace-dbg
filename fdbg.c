@@ -388,7 +388,7 @@ int main(int argc, char** argv) {
             int fd;
             CHK(fd = open("tmp",O_WRONLY | O_CREAT | O_TRUNC, 0666));
 
-            CHK(close(0));
+            CHK(close(1));
             CHK(dup(fd));
 
             execvp(argv[1],&argv[1]);
