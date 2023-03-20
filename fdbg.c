@@ -362,7 +362,6 @@ int main(int argc, char** argv) {
             raler(0,"error fork");
 
         case 0: 
-            printf("Je suis le fils et je suis tracé avec la commande ls\n");
             CHK(ptrace(PTRACE_TRACEME,0,NULL,NULL)); // On trace ce qui suit
             execvp(argv[1],&argv[1]);
             exit(EXIT_FAILURE);
