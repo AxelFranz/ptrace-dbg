@@ -2,6 +2,7 @@
 
 First implementation of a debugger in C.<br>
 Project for "Projet de recherche de Documentation Scientifique" with Théo ISCHIA and Félix NDIAYE.<br>
+Supervised by [Pierre David](https://gitlab.com/pdagog).
 
 Working functions :
 - Tracing syscalls
