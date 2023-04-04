@@ -1,5 +1,5 @@
 EXEC = fdbg dummy
-CFLAGS = -Wall -Wextra -Og -std=c11
+CFLAGS = -Wall -Wextra -g -std=c11
 
 all: $(EXEC)
 
