@@ -98,7 +98,7 @@ void sysTreat(pid_t child, char** calls){
     while(1){
         wait(&status);
         if(WIFEXITED(status)){
-            exit(0);
+            return;
         }
 
         CHK(orig_rax = ptrace(PTRACE_PEEKUSER, child, WORD_SIZE * ORIG_RAX,NULL));
@@ -112,40 +112,17 @@ void sysTreat(pid_t child, char** calls){
     }
 }
 
-void sbsTreat(pid_t child, char** calls){
-    (void) calls;
-    unsigned long line = 1;
-    CHK(ptrace(PTRACE_SINGLESTEP,child,NULL,NULL));
-
-    int status = 0;
-    while(1){
-        CHK(wait(&status));
-        if(WIFEXITED(status)){
-            exit(0);
-        }
-
-        printf("Ligne numero %ld\n",line);
-        line++;
-
-        CHK(ptrace(PTRACE_SINGLESTEP,child,NULL,NULL));
-    }
-}
-
 int main(int argc, char** argv) {
     pid_t child;
     void (*treat)(pid_t, char**);
     char** calls = parseFile();
 
-    if(argc < 3) {
-        raler(0,"Usage : ./fdbg [--sbs | --sys]  <COMMAND TO EXEC>");
-    } else if ( strncmp(argv[1], "--sys", strlen(argv[1])) == 0 ){
-        treat = sysTreat;
-    } else if ( strncmp(argv[1], "--sbs", strlen(argv[1])) == 0 ){
-        treat = sbsTreat;
-    } else {
-        raler(0,"Usage : ./fdbg [--sbs | --sys]  <COMMAND TO EXEC>");
+    if(argc != 2) {
+        raler(0,"Usage : ./fdbg <COMMAND TO EXEC>");
     }
 
+    treat=sysTreat;
+     
     switch(child = fork()){
         case -1:
             raler(1,"error fork");
@@ -160,7 +137,7 @@ int main(int argc, char** argv) {
             CHK(dup(fd));
 
 
-            execvp(argv[2],&argv[2]);
+            execvp(argv[1],&argv[1]);
             exit(EXIT_FAILURE);
 
     }
